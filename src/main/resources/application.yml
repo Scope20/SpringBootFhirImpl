@@ -1,0 +1,11 @@
+# All application.properties configuiration settings
+# https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+

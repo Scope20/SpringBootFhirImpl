@@ -1,0 +1,2193 @@
+#openapi: 3.0.0
+#info:
+#  description: my mhealth FHIR API
+#  version: 0.0.1
+#  title: my mhealth FHIR API
+#  license:
+#    name: All Rights Reserved
+#  termsOfService: https://mymhealth.com/terms
+#  contact:
+#    name: API support
+#    email: support@mymhealth.com
+#    url: https://mymhealth.com
+#security:
+#  - bearerAuth: [] #api scheme applied globally
+#servers:
+#  - url: 'https://api.mymhealth.com'
+#
+#paths:
+#  /patient:
+#    post:
+#      summary: Add a new Patient to the system
+#      operationId: addPatient
+#      tags:
+#        - Patient
+#      requestBody:
+#        description: The Patient datapoints
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Patient'
+#      responses:
+#        '201':
+#          description: Null Response
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '404':
+#          $ref: '#/components/responses/NotFound'
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/responses/Error'
+#
+#  /patient/{patientId}:
+#    get:
+#      summary: Returns Patient based on patientId
+#      operationId: getPatientById
+#      tags:
+#        - Patient
+#      parameters:
+#        - name: patientId
+#          in: path
+#          required: true
+#          description: ID of Patient to return
+#          schema:
+#            type: string
+#      responses:
+#        '200':
+#          description: Expected response to a valid request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/responses/Patient'
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '404':
+#          $ref: '#/components/responses/NotFound'
+#
+#  /organization:
+#    post:
+#      summary: Add a new organization to the system.
+#      operationId: addOrganization
+#      tags:
+#        - organization
+#      requestBody:
+#        description: The organization datapoints
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/organization'
+#      responses:
+#        '201':
+#          description: Null Response
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '404':
+#          $ref: '#/components/responses/NotFound'
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#
+#  /organization/{organizationId}:
+#    get:
+#      summary: Returns organization based on organizationId.
+#      operationId: getorganizationById
+#      tags:
+#        - organization
+#      parameters:
+#        - name: organizationId
+#          in: path
+#          required: true
+#          description: The id of organization to return
+#          schema:
+#            type: string
+#      responses:
+#        '200':
+#          description: Expected response to a valid request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/PatientRespiratoryEntry'
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '404':
+#           $ref:  '#/components/responses/NotFound'
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#
+#  /observation:
+#    post:
+#      summary: Creates a new observation.
+#      operationId: addObservation
+#      tags:
+#        - observation
+#      requestBody:
+#        description: The observation datapoints
+#        required: true
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/observation'
+#      responses:
+#        '201':
+#          description: Null response
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '404':
+#           $ref: '#/components/responses/NotFound'
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#
+#  /observation/{observationId}:
+#    get:
+#      summary: Returns Patient based on observationId.
+#      operationId: getObservationById
+#      tags:
+#        - observation
+#      parameters:
+#        - name: observationId
+#          in: path
+#          required: true
+#          description: ID of observation to return
+#          schema:
+#            type: string
+#      responses:
+#        '200':
+#          description: Expected response to a valid request
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/PatientRespiratoryEntry'
+#        '400':
+#          $ref: '#/components/responses/BadRequest'
+#        '401':
+#          $ref: '#/components/responses/Unauthorized'
+#        '404':
+#           $ref:  '#/components/responses/NotFound'
+#        default:
+#          description: unexpected error
+#          content:
+#            application/json:
+#              schema:
+#                $ref: '#/components/schemas/Error'
+#
+#components:
+#  responses:
+#      NotFound:
+#        description: The specified resource was not found
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Error'
+#
+#      BadRequest:
+#        description: Bad Request
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Error'
+#
+#      Unauthorized:
+#        description: Unauthorized
+#        content:
+#          application/json:
+#            schema:
+#              $ref: '#/components/schemas/Error'
+#
+#  schemas:
+#    address:
+#      description: An address expressed using postal conventions.
+#      properties:
+#        use:
+#          description: The purpose of this address.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        type:
+#          description: Distinguishes between physical addresses and mailing addresses.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        text:
+#          description: A full text representation of the address.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        line:
+#          description: Street name, number, direction & P.O. Box etc.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        city:
+#          description: Name of city, town etc.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        district:
+#          description: District name (aka county).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        state:
+#          description: Sub-unit of country (abbreviations ok).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        postalCode:
+#          description: Postal code for area
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        country:
+#          description: Country- a nation as commonly understood.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        period:
+#          description: Time period when address was/is in use.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#
+#    appointmentResponse:
+#      required:
+#        - appointment
+#        - participantStatus
+#      description: A reply to an appointment request for a Patient and/or practitioner(s), such as a confirmation or rejection.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        appointment:
+#          $ref: '#/components/schemas/appointment'
+#        start:
+#          type: string
+#          format: date-time
+#        end:
+#          type: string
+#          format: date-time
+#        participantType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        actor:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitionerRole', $ref: '#/components/schemas/relatedPerson', $ref: '#/components/schemas/device', $ref: '#/components/schemas/healthcareService', $ref: '#/components/schemas/location' }
+#        participantStatus:
+#          description: Participant status of the participant (accepted, declined, tentative, in-process, completed, needs-action, entered-in-error).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        comment:
+#          description: Addition comments.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#
+#    attachment:
+#      description: For referring to data content defined in other formats.
+#      properties:
+#        contentType:
+#          description: Mime type of the content.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        language:
+#          description: The human language of the content.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        data:
+#          description: The actual data of the attachment - a sequence of bytes.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        url:
+#          description: Uri where the data can be found.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        size:
+#          description: The number of bytes of data that make up this attachment.
+#          type: integer
+#        hash:
+#          description: calculated hash of the data using SHA-1.
+#          type: string
+#        title:
+#          description: A label to display in place of the data.
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        creation:
+#          description: The date that the attachment was first created.
+#          type: string
+#          format: date-time
+#
+#    animal:
+#      description: The Patient is known to be an animal.
+#      properties:
+#        species:
+#          $ref: '#/components/schemas/codeableConcept'
+#        breed:
+#          $ref: '#/components/schemas/codeableConcept'
+#        genderStatus:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    basic:
+#      required:
+#        - code
+#      description: Basic is used for handling concepts that don't map to an existing resource or are not yet defined in FHIR.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        code:
+#          $ref: '#/components/schemas/codeableConcept'
+#        created:
+#          type: string
+#          format: date
+#        author:
+#          { $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/relatedPerson' }
+#
+#    binary:
+#      required:
+#        - contentType
+#        - content
+#      description: Pure binary content defined by a format other than FHIR.
+#      properties:
+#        contentType:
+#          description: Mimetype of the binary content represented as a standard MimeType.
+#          type: string
+#        content:
+#          description: The actual content, base64 encoded.
+#          type: string
+#
+#    bodySite:
+#      required:
+#        - Patient
+#      description: Specific and identified anatomical location.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        active:
+#          description: Whether this body site is in active use.
+#          type: boolean
+#        code:
+#          $ref: '#/components/schemas/codeableConcept'
+#        qualifier:
+#          $ref: '#/components/schemas/codeableConcept'
+#        description:
+#          description: A summary, charactarization or explanation of the anatomic location.
+#          type: string
+#        image:
+#          $ref: '#/components/schemas/attachment'
+#        patient:
+#          $ref: '#/components/schemas/Patient'
+#
+#    contactDetail:
+#      properties:
+#        name:
+#          description: The name of the individual to contact.
+#          type: string
+#        telecom:
+#          $ref: '#/components/schemas/contactPoint'
+#
+#    contactPoint:
+#      description: Details of a technology mediated contact point (phone, fax, email, etc.).
+#      properties:
+#        system:
+#          type: string
+#        value:
+#          type: string
+#        use:
+#          type: string
+#        rank:
+#          type: integer
+#          minimum: 0
+#        period:
+#          $ref: '#/components/schemas/period'
+#
+#    contributor:
+#      description: Contributor information.
+#      properties:
+#        type:
+#          type: string
+#        name:
+#          type: string
+#        contact:
+#          $ref: '#/components/schemas/contactPoint'
+#
+#    coding:
+#      description: Reference to code.
+#      properties:
+#        system:
+#          type: string
+#        version:
+#          type: string
+#        code:
+#          type: string
+#        display:
+#          type: string
+#        userSelected:
+#          type: boolean
+#
+#    enrollmentResponse:
+#      description: Enrollment response.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        request:
+#          $ref: '#/components/schemas/enrollmentRequest'
+#        outcome:
+#          $ref: '#/components/schemas/codeableConcept'
+#        disposition:
+#          type: string
+#        created:
+#          type: string
+#          format: date-time
+#        organization:
+#          $ref: '#/components/schemas/organization'
+#        requestProvider:
+#          $ref: '#/components/schemas/practitioner'
+#        requestOrganization:
+#          $ref: '#/components/schemas/organization'
+#
+#    enrollmentRequest:
+#      description: Enrollment request.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        created:
+#          type: string
+#          format: date-time
+#        insurer:
+#          $ref: '#/components/schemas/organization'
+#        provider:
+#          $ref: '#/components/schemas/practitioner'
+#        organization:
+#          $ref: '#/components/schemas/organization'
+#        subject:
+#          $ref: '#/components/schemas/Patient'
+#        coverage:
+#          $ref: '#/components/schemas/coverage'
+#
+#    Error:
+#      required:
+#       - code
+#       - message
+#      properties:
+#        code:
+#          description: The error code
+#          type: integer
+#          format: int32
+#        message:
+#          description: The error message
+#          type: string
+#
+#    endpoint:
+#      required:
+#        - status
+#        - connectionType
+#        - payloadType
+#        - address
+#      properties:
+#        identifier:
+#          type: string
+#          description: Identifies this endpoint across multiple systems.
+#        status:
+#          type: string
+#          description: endpoint status
+#          enum:
+#            - active
+#            - suspended
+#            - error
+#            - off
+#            - entered-in-error
+#            - test
+#        connectionType:
+#          $ref: '#/components/schema/coding'
+#        name:
+#          type: string
+#          description: A name this endpoint can be refered to with.
+#        managingOrganization:
+#          type: string
+#          description: >-
+#            The organization that manages this endpoint, not including
+#            cloud hosting services (the organization directly associated
+#            with the data).
+#        contact:
+#          type: string
+#          description: Contact details for a human to contact about the subscription
+#        period:
+#          type: string
+#          format: date-time
+#          description: The interval during which the endpoint is expected to be operational.
+#        payloadType:
+#          type: string
+#          description: Describes the acceptable content that can be communicated on
+#            the endpoint.
+#        payloadMimeType:
+#          type: string
+#          description: >-
+#            The mime type to send the payload in - e.g.
+#            application/fhir+json. If mime type is not specified, the
+#            sender could send nay content (including no content depending
+#            on the connectionType).
+#        address:
+#          type: string
+#          description: The uri that describes that actual end-point to connect to.
+#        header:
+#          type: string
+#          description: >-
+#            Additional headers/information to send as part of the
+#            notification.
+#
+#    flag:
+#      required:
+#        - status
+#        - code
+#        - subject
+#      description: Key information to flag to healthcare providers.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        category:
+#          $ref: '#/components/schemas/codeableConcept'
+#        code:
+#          $ref: '#/components/schemas/codeableConcept'
+#        subject:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/location', $ref: '#/components/schemas/group', $ref: '#/components/schemas/organization', $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/planDefinition', $ref: '#/components/schemas/medication', $ref: '#/components/schemas/procedure' }
+#        period:
+#          $ref: '#/components/schemas/period'
+#        encounter:
+#          $ref: '#/components/schemas/encounter'
+#        author:
+#          { $ref: '#/components/schemas/device', $ref: '#/components/schemas/organization', $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitioner' }
+#
+#    humanName:
+#      description: Name of a human - parts and usage.
+#      properties:
+#        use:
+#          type: string
+#        text:
+#          type: string
+#        family:
+#          type: string
+#        given:
+#          type: string
+#        prefix:
+#          type: string
+#        suffix:
+#          type: string
+#        period:
+#          $ref: '#/components/schemas/period'
+#
+#    identifier:
+#      description: A technical identifier - identifies some entity uniquely and unambiguously.
+#      properties:
+#        use:
+#          type: string
+#        type:
+#          type: string
+#        system:
+#          type: string
+#        value:
+#          type: string
+#        period:
+#          $ref: '#/components/schemas/period'
+#        assigner:
+#          type: string
+#
+#    period:
+#      properties:
+#        start:
+#          type: string
+#          format: date
+#        end:
+#          type: string
+#          format: date
+#
+#    invalidInput:
+#      properties:
+#        code:
+#          type: integer
+#        type:
+#          type: string
+#        message:
+#          type: string
+#
+#    library:
+#      required:
+#        - status
+#        - type
+#      description: represents a library of quality improvement components
+#      properties:
+#        url:
+#          type: string
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        version:
+#          type: string
+#        name:
+#          type: string
+#        title:
+#          type: string
+#        status:
+#          type: string
+#        experimental:
+#          type: boolean
+#        type:
+#          $ref: '#/components/schemas/codeableConcept'
+#        date:
+#          type: string
+#          format: date-time
+#        publisher:
+#          type: string
+#        description:
+#          type: string
+#        purpose:
+#          type: string
+#        usage:
+#          type: string
+#        approvalDate:
+#          type: string
+#        lastReviewDate:
+#          type: string
+#        effectivePeriod:
+#          $ref: '#/components/schemas/codeableConcept'
+#        useContext:
+#          $ref: '#/components/schemas/usageContext'
+#        jurisdiction:
+#          $ref: '#/components/schemas/codeableConcept'
+#        topic:
+#          $ref: '#/components/schemas/codeableConcept'
+#        contributor:
+#          $ref: '#/components/schemas/contributor'
+#        contact:
+#          $ref: '#/components/schemas/contactDetail'
+#        copyright:
+#          type: string
+#        relatedArtifact:
+#          $ref: '#/components/schemas/relatedArtifact'
+#        parameter:
+#          $ref: '#/components/schemas/parameterDefinition'
+#        dataRequirement:
+#          $ref: '#/components/schemas/dataRequirement'
+#        content:
+#          $ref: '#/components/schemas/attachment'
+#
+#    meta:
+#      description: Metadata about a resource.
+#      properties:
+#        versionId:
+#          type: string
+#        lastUpdated:
+#          type: string
+#          format: date-time
+#        profile:
+#          type: string
+#        security:
+#          $ref: '#/components/schemas/coding'
+#        tag:
+#          $ref: '#/components/schemas/coding'
+#
+#    narrative:
+#      required:
+#        - status
+#        - div
+#      description: A human-readable formatted text, including images
+#      properties:
+#        status:
+#          type: string
+#        div:
+#          type: string
+#
+#    Patient:
+#      description: Demographics and other administrative information about an individual or animal recieving care.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        active:
+#          type: boolean
+#        name:
+#          $ref: '#/components/schemas/humanName'
+#        telecom:
+#          $ref: '#/components/schemas/ContactPoint'
+#        gender:
+#          type: string
+#        birthDate:
+#          type: string
+#          format: date
+#        deceased:
+#          $ref: '#/components/schemas/deceased'
+#        address:
+#          $ref: '#/components/schemas/Address'
+#        maritalStatus:
+#          $ref: '#/components/schemas/codeableConcept'
+#        multipleBirth:
+#          { $ref: '#/components/schemas/multipleBirthBoolean', $ref: '#/components/schemas/multipleBirthInteger' }
+#        photo:
+#          $ref: '#/components/schemas/Attachment'
+#        contact:
+#          $ref: '#/components/schemas/contact'
+#        animal:
+#          $ref: '#/components/schemas/animal'
+#        communication:
+#          $ref: '#/components/schemas/communication'
+#        careProvider:
+#          { $ref: '#/components/schemas/organization', $ref: '#/components/schemas/practitioner' }
+#        managingOrganization:
+#          $ref: '#/components/schemas/organization'
+#        link:
+#          $ref: '#/components/schemas/link'
+#
+#    communication:
+#      required:
+#        - language
+#      properties:
+#        language:
+#          $ref: '#/components/schemas/codeableConcept'
+#        preferred:
+#          type: boolean
+#
+#    deceased:
+#      properties:
+#        deceasedBoolean:
+#          type: boolean
+#        deceasedDateTime:
+#          type: string
+#          format: date-time
+#
+#    contact:
+#      properties:
+#        relationship:
+#          $ref: '#/components/schemas/codeableConcept'
+#        name:
+#          $ref: '#/components/schemas/humanName'
+#        telecom:
+#          $ref: '#/components/schemas/contactPoint'
+#        address:
+#          $ref: '#/components/schemas/address'
+#        gender:
+#          type: string
+#        organization:
+#          $ref: '#/components/schemas/organization'
+#        period:
+#          $ref: '#/components/schemas/period'
+#
+#    animal:
+#      required:
+#        - species
+#      properties:
+#        species:
+#          $ref: '#/components/schemas/codeableConcept'
+#        breed:
+#          $ref: '#/components/schemas/codeableConcept'
+#        genderStatus:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    link:
+#      required:
+#        - type
+#      properties:
+#        other:
+#          { $ref: '#/components/schemas/patient', $ref: '#/components/schemas/relatedPerson' }
+#        type:
+#          type: string
+#
+#
+#
+#
+#    parameterDefinition:
+#      description: Definition of a parameter to a module.
+#      properties:
+#        name:
+#          type: string
+#        use:
+#          type: string
+#        min:
+#          type: integer
+#        max:
+#          type: integer
+#        documentation:
+#          type: string
+#        type:
+#          type: string
+#        profile:
+#          $ref: '#/components/schemas/structureDefinition'
+#
+#    paymentNotice:
+#      description: Payment notice requests.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        statusDate:
+#          type: string
+#        created:
+#          type: string
+#          format: date-time
+#        target:
+#          $ref: '#/components/schemas/organization'
+#        provider:
+#          $ref: '#/components/schemas/practitioner'
+#        organization:
+#          $ref: '#/components/schemas/organization'
+#        paymentStatus:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    period:
+#      description: A time period defined by a start and end date and optionally time.
+#      properties:
+#        start:
+#          description: The start of the period.
+#          type: string
+#          format: date-time
+#        end:
+#          description: The end of the period. If end is missing, period is ongoing.
+#          type: string
+#          format: date-time
+#
+#    range:
+#      description: Set of values bound by low and high.
+#      properties:
+#        low:
+#          description: The low limit
+#          type: integer
+#          format: double
+#          exclusiveMinimum: true
+#        high:
+#          description: The high limit
+#          type: integer
+#          format: double
+#          exclusiveMaximum: true
+#
+#    ratio:
+#      properties:
+#        numerator:
+#          $ref: '#/components/schemas/quantity'
+#        denominator:
+#          $ref: '#/components/schemas/quantity'
+#
+#    reference:
+#      description: A reference from one resource to another.
+#      properties:
+#        reference:
+#          type: string
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        display:
+#          type: string
+#
+#    resource:
+#      description: Base resource.
+#      properties:
+#        id:
+#          type: string
+#        meta:
+#          $ref: '#/components/schemas/meta'
+#        implicitRules:
+#          type: string
+#        language:
+#          type: string
+#
+#    relatedArtifact:
+#      description: Related artifacts for a knowledge resource.
+#      properties:
+#        type:
+#          type: string
+#        display:
+#          type: string
+#        citation:
+#          type: string
+#        url:
+#          type: string
+#        document:
+#          type: string
+#
+#    relatedPerson:
+#      description: >-
+#        A person that is related to the patient, but who is not a direct target of
+#        care.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        active:
+#          type: boolean
+#        patient:
+#          $ref: '#/components/schemas/Patient'
+#        relationship:
+#          $ref: '#/components/schemas/codeableConcept'
+#        name:
+#          type: string
+#        telecom:
+#          $ref: '#/components/schemas/contactPoint'
+#        gender:
+#          type: string
+#        birthDate:
+#          type: string
+#        address:
+#          type: string
+#        photo:
+#          type: string
+#        period:
+#          $ref: '#/components/schemas/period'
+#
+#    researchSubject:
+#      required:
+#        - status
+#        - study
+#        - individual
+#      description: Investigation increase healthcare-related Patient-independent knowledge.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        period:
+#          $ref: '#/components/schemas/period'
+#        study:
+#          $ref: '#/components/schemas/researchStudy'
+#        individual:
+#          $ref: '#/components/schemas/Patient'
+#        assignedArm:
+#          type: string
+#        actualArm:
+#          type: string
+#        consent:
+#          $ref: '#/components/schemas/consent'
+#
+#    sampledData:
+#      description: A series of measurements taken by a device, with upper and lower limits.
+#      properties:
+#        origin:
+#          $ref: '#/components/schemas/range'
+#        period:
+#          description: Number of milliseconds between samples.
+#          type: integer
+#          format: double
+#        factor:
+#          description: Multiply data by this before adding to origin.
+#          type: integer
+#          format: double
+#        lowerLimit:
+#          description: Lower limit of detection.
+#          type: integer
+#          format: double
+#        upperLimit:
+#          description: Upper limit of detection.
+#          type: integer
+#          format: double
+#        dimensions:
+#          description: Number of sample points at each time point.
+#          type: integer
+#        data:
+#          description: Decimal values with spaces, or "E" | "U" | "L"
+#          type: string
+#
+#    schedule:
+#      required:
+#        - actor
+#      description: A container for slots of time that may be available for booking appointments.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        active:
+#          type: boolean
+#        serviceCategory:
+#          $ref: '#/components/schemas/codeableConcept'
+#        serviceType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        specialty:
+#          $ref: '#/components/schemas/codeableConcept'
+#        actor:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/practitionerRole', $ref: '#/components/schemas/relatedPerson', $ref: '#/components/schemas/device', $ref: '#/components/schemas/healthcareService', $ref: '#/components/schemas/location' }
+#        planningHorizon:
+#          $ref: '#/components/schemas/period'
+#        comment:
+#          type: string
+#
+#    serviceDefinition:
+#      required:
+#        - status
+#      description: A description of decision support service functionality.
+#      properties:
+#        url:
+#          type: string
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        version:
+#          type: string
+#        name:
+#          type: string
+#        title:
+#          type: string
+#        status:
+#          type: string
+#        experimental:
+#          type: boolean
+#        date:
+#          type: string
+#          format: date-time
+#        publisher:
+#          type: string
+#        description:
+#          type: string
+#        purpose:
+#          type: string
+#        usage:
+#          type: string
+#        approvalDate:
+#          type: string
+#        lastReviewDate:
+#          type: string
+#        effectivePeriod:
+#          $ref: '#/components/schemas/period'
+#        useContext:
+#          $ref: '#/components/schemas/usageContext'
+#        jurisdiction:
+#          $ref: '#/components/schemas/codeableConcept'
+#        topic:
+#          $ref: '#/components/schemas/codeableConcept'
+#        contributor:
+#          $ref: '#/components/schemas/contributor'
+#        contact:
+#          $ref: '#/components/schemas/contactDetail'
+#        copyright:
+#          type: string
+#        relatedArtifact:
+#          $ref: '#/components/schemas/relatedArtifact'
+#        trigger:
+#          $ref: '#/components/schemas/triggerDefinition'
+#        dataRequirement:
+#          $ref: '#/components/schemas/dataRequirement'
+#        operationDefinition:
+#          $ref: '#/components/schemas/operationDefinition'
+#
+#    slot:
+#      required:
+#        - schedule
+#        - status
+#        - start
+#        - end
+#      description: >-
+#        A slot of time on a schedule that may be available for booking
+#        appointments.
+#      properties:
+#        identifer:
+#          $ref: '#/components/schemas/identifier'
+#        serviceCategory:
+#          $ref: '#/components/schemas/codeableConcept'
+#        serviceType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        specialty:
+#          $ref: '#/components/schemas/codeableConcept'
+#        appointmentType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        schedule:
+#          type: string
+#        status:
+#          type: string
+#        start:
+#          type: string
+#          format: date-time
+#        end:
+#          type: string
+#          format: date-time
+#        overbooked:
+#          type: boolean
+#        comment:
+#          type: string
+#
+#    supplyDelivery:
+#      description: Delivery of supply.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          type: string
+#        patient:
+#          $ref: '#/components/schemas/Patient'
+#        type:
+#          $ref: '#/components/schemas/codeableConcept'
+#        quantity:
+#          $ref: '#/components/schemas/quantity'
+#        suppliedItem:
+#          { $ref: '#/components/schemas/medication', $ref: '#/components/schemas/substance', $ref: '#/components/schemas/device' }
+#        supplier:
+#          $ref: '#/components/schemas/practitioner'
+#        whenPrepared:
+#          $ref: '#/components/schemas/period'
+#        time:
+#          type: string
+#          format: date-time
+#        destination:
+#          $ref: '#/components/schemas/location'
+#        receiver:
+#          $ref: '#/components/schemas/practitioner'
+#
+#    quantity:
+#      properties:
+#        value:
+#          type: integer
+#          format: double
+#        comparator:
+#          type: string
+#        unit:
+#          type: string
+#        system:
+#          type: string
+#        code:
+#          type: string
+#
+#    account:
+#      required:
+#        - coverage
+#        - guarantor
+#      description: A financial tool for tracking value accrued for a particular purpose.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          description: Indicates if the account is presently active or inactive
+#          type: boolean
+#        type:
+#          $ref: '#/components/schemas/codeableConcept'
+#        name:
+#          description: name used for the account
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        patient:
+#          $ref: '#/components/schemas/Patient'
+#        device:
+#          $ref: '#/components/schemas/device'
+#        practitioner:
+#          $ref: '#/components/schemas/practitioner'
+#        location:
+#          $ref: '#/components/schemas/location'
+#        healthcareService:
+#          $ref: '#/components/schemas/healthcareService'
+#        organization:
+#          $ref: '#/components/schemas/organization'
+#        period:
+#          $ref: '#/components/schemas/period'
+#        active:
+#          $ref: '#/components/schemas/period'
+#        balance:
+#          $ref: '#/components/schemas/quantity'
+#        coverage:
+#          $ref: '#/components/schemas/coverage'
+#        owner:
+#          $ref: '#/components/schemas/organization'
+#        description:
+#          description: additional information about the account.
+#          type: string
+#          minimum: 0
+#        guarantor:
+#          $ref: '#/components/schemas/guarantor'
+#
+#    coverage:
+#      description: The party(s) that are responsible for covering the payment of this account.
+#      properties:
+#        coverage:
+#          $ref: '#/components/schemas/coverage'
+#        priority:
+#          type: integer
+#          minimum: 0
+#
+#    guarantor:
+#      description: Person(s) responsible for the payment.
+#      properties:
+#        party:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/relatedPerson', $ref: '#/components/schemas/organization' }
+#        ohHold:
+#          description: A guarantor may be placed on credit hold or temporarily suspended.
+#          type: boolean
+#        period:
+#          $ref: '#/components/schemas/period'
+#
+#
+#    activityDefinition:
+#      required:
+#        - status
+#      description: The definition of a specific activity to be taken, independent of any particular Patient or context.
+#      properties:
+#        url:
+#          description: Logical URI to reference this activity definition.
+#          type: string
+#          minimum: 0
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        version:
+#          description: Business version of the activity definition.
+#          type: string
+#          minimum: 0
+#        name:
+#          description: Name for this activity definition (machine friendly).
+#          type: string
+#          minimum: 0
+#        title:
+#          description: Name for this activity definition (human friendly).
+#          type: string
+#          minimum: 0
+#        status:
+#          description: The status of this activity. Enables tracking the life-cycle of the content.
+#          type: string
+#          minimum: 0
+#        experimental:
+#          description: A boolean to inidicate that this activity definition is for testing purposes.
+#          type: boolean
+#        date:
+#          description: The date (and time) when the activity definition was published.
+#          type: string
+#          format: date-time
+#        publisher:
+#          description: The name of the individual or organisation that published the activity definition.
+#          type: string
+#          minimum: 0
+#        description:
+#          description: A description of the activity definition.
+#          type: string
+#          minimum: 0
+#        purpose:
+#          description: Why this activity definition is needed and why it has been designed.
+#          type: string
+#          minimum: 0
+#        usage:
+#          description: A description of how the assest is used from a clinical perspective.
+#          type: string
+#          minimum: 0
+#        approvalDate:
+#          description: The date on which the resource content was approved by the publisher.
+#          type: string
+#          format: date
+#        lastReviewDate:
+#          description: The date on which the resource content was last reviewed.
+#          type: string
+#          format: date
+#        effectivePeriod:
+#          $ref: '#/components/schemas/period'
+#        useContext:
+#          $ref: '#/components/schemas/usageContext'
+#        jurisdiction:
+#          $ref: '#/components/schemas/codeableConcept'
+#        topic:
+#          $ref: '#/components/schemas/codeableConcept'
+#        contributor:
+#          $ref: '#/components/schemas/contributor'
+#        contact:
+#          $ref: '#/components/schemas/contactDetail'
+#        copyright:
+#          description: Use and/or publishing restrictions.
+#          type: string
+#          minimum: 0
+#        relatedArtifact:
+#          $ref: '#/components/schemas/relatedArtifact'
+#        relatedArtifacts:
+#          $ref: '#/components/schemas/relatedArtifact'
+#        library:
+#          $ref: '#/components/schemas/library'
+#        kind:
+#          description: The kind of resource the activity definition is representing.
+#          type: string
+#          minimum: 0
+#        code:
+#          $ref: '#/components/schemas/codeableConcept'
+#        timing:
+#          $ref: '#/components/schemas/timing'
+#        location:
+#          $ref: '#/components/schemas/location'
+#        activityDefinitionParticipant:
+#          $ref: '#/components/schemas/participant'
+#        product:
+#          $ref: '#/components/schemas/product'
+#        quantity:
+#          $ref: '#/components/schemas/range'
+#        dosage:
+#          $ref: '#/components/schemas/dosage'
+#        bodySite:
+#          $ref: '#/components/schemas/codeableConcept'
+#        transform:
+#          $ref: '#/components/schemas/structureMap'
+#        dynamicValue:
+#          $ref: '#/components/schemas/dynamicValue'
+#
+#    dynamicValue:
+#      description: Dynamic values that will be evaluated to produce values for elements of the resulting resource.
+#      properties:
+#        description:
+#          description: A brief description of the intended semantics of the dynamic value.
+#          type: string
+#          minimum: 0
+#        path:
+#          description: The path to the element to be customised.
+#          type: string
+#          minimum: 0
+#        language:
+#          description: The media type of the language for the expression.
+#          type: string
+#          minimum: 0
+#        expression:
+#          description: An expression specifying the value of the customised element.
+#          type: string
+#          minimum: 0
+#
+#    product:
+#      properties:
+#        productReference:
+#          { $ref: '#/components/schemas/medication', $ref: '#/components/schemas/substance' }
+#        productCodeableConcept:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    activityDefinitionParticipant:
+#      properties:
+#        type:
+#          description: The type of participant in the action.
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        role:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    timing:
+#      properties:
+#        timingTiming:
+#          $ref: '#/components/schemas/timing'
+#        timingDateTime:
+#          type: string
+#          format: date-time
+#        timingPeriod:
+#          $ref: '#/components/schemas/period'
+#        timingRange:
+#          $ref: '#/components/schemas/range'
+#
+#    adverseEvent:
+#      required:
+#        - subject
+#      description: Medical care, research study or other healthcare event causing physical injury.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        category:
+#          description: The type of event which is important to characterise what occurred and caused (or had the potential to) harm to the subject.
+#          type: string
+#        type:
+#          $ref: '#/components/schemas/codeableConcept'
+#        subject:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/researchSubject', $ref: '#/components/schemas/medication', $ref: '#/components/schemas/device' }
+#        date:
+#          description: The date and time when the adverse event occurred.
+#          type: string
+#          format: date-time
+#        reaction:
+#          $ref: '#/components/schemas/condition'
+#        location:
+#          $ref: '#/components/schemas/location'
+#        seriousness:
+#          $ref: '#/components/schemas/codeableConcept'
+#        outcome:
+#          $ref: '#/components/schemas/codeableConcept'
+#        recorder:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/relatedPerson' }
+#        eventParticipant:
+#          { $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/device' }
+#        description:
+#          description: Description of the adverse event
+#          type: string
+#          minimum: 0
+#        suspectEntity:
+#          $ref: '#/components/schemas/suspectEntity'
+#
+#    suspectEntity:
+#      description: Refers to the specific entity that caused the adverse event
+#      properties:
+#        instance:
+#          { $ref: '#/components/schemas/substance', $ref: '#/components/schemas/medication', $ref: '#/components/schemas/medicationAdministration', $ref: '#/components/schemas/medicationStatement', $ref: '#/components/schemas/device' }
+#        causality:
+#          type: string
+#          minimum: 0
+#        causalityAssessment:
+#          $ref: '#/components/schemas/codeableConcept'
+#        causalityProductRelatedness:
+#          type: string
+#          minimum: 0
+#        causalityMethod:
+#          $ref: '#/components/schemas/codeableConcept'
+#        causalityAuthor:
+#          $ref: '#/components/schemas/practitioner'
+#        causalityResult:
+#          $ref: '#/components/schemas/codeableConcept'
+#        subjectMedicalHistory:
+#          { $ref: '#/components/schemas/condition', $ref: '#/components/schemas/observation', $ref: '#/components/schemas/allergyIntolerance', $ref: '#/components/schemas/familyMemberHistory', $ref: '#/components/schemas/immunization', $ref: '#/components/schemas/procedure' }
+#        referenceDocument:
+#          $ref: '#/components/schemas/documentReference'
+#        study:
+#          $ref: '#/components/schemas/researchStudy'
+#
+#
+#    allergyIntolerance:
+#      required:
+#        - Patient
+#        - substance
+#      description: allergy or intolerance (risk of adverse reaction to a substance).
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        clinicalStatus:
+#          description: The clinical status of the allergy or intolerance.
+#          type: string
+#          minimum: 0
+#        verificationStatus:
+#          description: Assertion about the certainty associated with the propensity, or potental risk, of a reaction to the identified substance.
+#          type: string
+#          minimum: 0
+#        type:
+#          description: Identification of the underlying physiological mechanism for the reaction risk.
+#          type: string
+#          minimum: 0
+#        category:
+#          description: Category of the identified substance.
+#          type: string
+#          minimum: 0
+#        criticality:
+#          description: Estimate of the potential clinical harm of the reaction to the identified substance.
+#          type: string
+#          minimum: 0
+#        code:
+#          $ref: '#/components/schemas/codeableConcept'
+#        patient:
+#          $ref: '#/components/schemas/Patient'
+#        onset:
+#          $ref: '#/components/schemas/onset'
+#        assertedDate:
+#          description: The date on which the existance of the AllergyIntolerance was first asserted or acknowledged.
+#          type: string
+#          format: date-time
+#        recorder:
+#          { $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/Patient' }
+#        asserter:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/relatedPerson', $ref: '#/components/schemas/practitioner' }
+#        lastOccurrence:
+#          description: Represents the date and/or time of the last known occurrence of a reaction event.
+#          type: string
+#          format: date-time
+#        note:
+#          $ref: '#/components/schemas/annotation'
+#        reaction:
+#          $ref: '#/components/schemas/reaction'
+#
+#    reaction:
+#      required:
+#        - manifestation
+#      properties:
+#        substance:
+#          $ref: '#/components/schemas/codeableConcept'
+#        manifestation:
+#          $ref: '#/components/schemas/codeableConcept'
+#        description:
+#          description: Description of the event as a whole.
+#          type: string
+#        onset:
+#          description: Record of the date and/or time of the onset of the Reaction.
+#          type: string
+#          format: date-time
+#        severity:
+#          description: Clinical assessment of the severity of the reaction as a whole (mild, moderate, severe)
+#          type: string
+#        exposureRoute:
+#          $ref: '#/components/schemas/codeableConcept'
+#        note:
+#          $ref: '#/components/schemas/annotation'
+#
+#    onset:
+#      properties:
+#        onsetDateTime:
+#          type: string
+#          format: date-time
+#        onsetAge:
+#          type: integer
+#          minimum: 0
+#        onsetPeriod:
+#          $ref: '#/components/schemas/period'
+#        onsetRange:
+#          $ref: '#/components/schemas/range'
+#        onsetString:
+#          type: string
+#          minimum: 0
+#
+#    annotation:
+#      description: a text note which also contains information about who made the statement and when.
+#      properties:
+#        author:
+#          $ref: '#/components/schemas/author'
+#        time:
+#          description: when this particular annotation was made.
+#          type: string
+#          format: date-time
+#        text:
+#          description: the text of the annotation.
+#          type: string
+#          minimum: 0
+#
+#    author:
+#      properties:
+#        authorReference:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/relatedPerson' }
+#        authorString:
+#          type: string
+#          minimum: 0
+#
+#    any:
+#      description: >-
+#        Some elements do not have a specified type. The type is represented by the wildcard symbol "*".
+#        In these cases, the element type may be one of the following:
+#      properties:
+#        boolean:
+#          type: boolean
+#        integer:
+#          type: integer
+#        decimal:
+#          type: integer
+#          format: double
+#        base64Binary:
+#          type: string
+#        instant:
+#          type: string
+#          format: date-time
+#        string:
+#          type: string
+#        uri:
+#          type: string
+#        date:
+#          type: string
+#          format: date
+#        dateTime:
+#          type: string
+#          format: date-time
+#        time:
+#          type: string
+#        code:
+#          type: string
+#        oid:
+#          type: string
+#        id:
+#          type: string
+#        unsignedInt:
+#          type: integer
+#          minimum: 0
+#        positiveInt:
+#          type: integer
+#          minimum: 1
+#        markdown:
+#          type: string
+#        annotation:
+#          $ref: '#/components/schemas/annotation'
+#        attachment:
+#          type: string
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        codeableConcept:
+#          $ref: '#/components/schemas/codeableConcept'
+#        coding:
+#          $ref: '#/components/schemas/coding'
+#        quantity:
+#          $ref: '#/components/schemas/quantity'
+#        range:
+#          $ref: '#/components/schemas/range'
+#        period:
+#          $ref: '#/components/schemas/period'
+#        ratio:
+#          $ref: '#/components/schemas/ratio'
+#        sampledData:
+#          $ref: '#/components/schemas/sampledData'
+#        signature:
+#          $ref: '#/components/schemas/signature'
+#        humanName:
+#          $ref: '#/components/schemas/humanName'
+#        address:
+#          $ref: '#/components/schemas/address'
+#        contactPoint:
+#          $ref: '#/components/schemas/contactPoint'
+#        timing:
+#          $ref: '#/components/schemas/timing'
+#        reference:
+#          $ref: '#/components/schemas/reference'
+#        meta:
+#          $ref: '#/components/schemas/meta'
+#
+#    appointment:
+#      required:
+#        - participant
+#        - status
+#      description: >-
+#        A booking of a healthcare event among patient(s), practitioner(s), related
+#        person(s) and/pr device(s) for a specific date/time. This may result in
+#        one or more Encounter(s).
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        status:
+#          description: The overall status of the appointment.
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        serviceCategory:
+#          $ref: '#/components/schemas/codeableConcept'
+#        serviceType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        sepeciality:
+#          $ref: '#/components/schemas/codeableConcept'
+#        appointmentType:
+#          $ref: '#/components/schemas/codeableConcept'
+#        reason:
+#          $ref: '#/components/schemas/codeableConcept'
+#        indication:
+#           { $ref: '#/components/schemas/condition', $ref: '#/components/schemas/procedure' }
+#        priority:
+#          description: The priority of the appointment.
+#          type: integer
+#        description:
+#          description: A brief description of the appointment.
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        start:
+#          description: Date/Time that the appointment is to take place.
+#          type: string
+#          format: date-time
+#        end:
+#          description: Date/Time that the appointment is to conclude.
+#          type: string
+#          format: date-time
+#        minutesDuration:
+#          type: integer
+#          minimum: 0
+#        slot:
+#          $ref: '#/components/schemas/slot'
+#        created:
+#          description: The date that this appointment was initially created.
+#          type: string
+#          format: date-time
+#        comment:
+#          description: Additional comments about the appointment.
+#          type: string
+#          minimum: 0
+#          maximum: 1000
+#        incomingReferral:
+#          $ref: '#/components/schemas/referralRequest'
+#        participant:
+#          $ref: '#/components/schemas/participant'
+#        requestedPeriod:
+#          $ref: '#/components/schemas/period'
+#
+#    participant:
+#      properties:
+#        type:
+#          $ref: '#/components/schemas/codeableConcept'
+#        actor:
+#          { $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/relatedPerson', $ref: '#/components/schemas/device', $ref: '#/components/schemas/healthcareService', $ref: '#/components/schemas/location' }
+#        required:
+#          description: Is this participant required to be present at the meeting (required, optional, information-only).
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        status:
+#          description: Participation status of the actor (accepted, declined, tentative, needs-actions).
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#
+#
+#    auditEvent:
+#      required:
+#        - type
+#        - recorded
+#        - agent
+#        - source
+#      description: Event record kept for security purposes.
+#      properties:
+#        type:
+#          $ref: '#/components/schemas/coding'
+#        subtype:
+#          $ref: '#/components/schemas/coding'
+#        action:
+#          description: Indicator for type of action performed during the event.
+#          type: string
+#          minimum: 0
+#        recorded:
+#          description: Time when the event occurred on source.
+#          type: string
+#          format: date-time
+#        outcome:
+#          description: Whether the event succeeded or failed.
+#          type: string
+#          minimum: 0
+#        outcomeDesc:
+#          description: Description of the event outcome.
+#          type: string
+#          minimum: 0
+#        purposeOfEvent:
+#          $ref: '#/components/schemas/codeableConcept'
+#        agent:
+#          $ref: '#/components/schemas/agent'
+#        source:
+#          $ref: '#/components/schemas/source'
+#        entity:
+#          $ref: '#/components/schemas/entity'
+#
+#
+#    agent:
+#      required:
+#      - requestor
+#      properties:
+#        role:
+#          $ref: '#/components/schemas/codeableConcept'
+#        reference:
+#          { $ref: '#/components/schemas/practitioner', $ref: '#/components/schemas/organization', $ref: '#/components/schemas/device', $ref: '#/components/schemas/Patient', $ref: '#/components/schemas/relatedPerson' }
+#        userId:
+#          $ref: '#/components/schemas/identifier'
+#        altId:
+#          description: Alternative User id e.g. authentication.
+#          type: string
+#          minimum: 0
+#        name:
+#          description: Human-meaningful name for the agent.
+#          type: string
+#          minimum: 0
+#          maximum: 50
+#        requestor:
+#          type: boolean
+#        location:
+#          $ref: '#/components/schemas/location'
+#        policy:
+#          description: Policy that authorized event.
+#          type: string
+#          minimum: 0
+#        media:
+#          $ref: '#/components/schemas/coding'
+#        network:
+#          $ref: '#/components/schemas/network'
+#        purposeOfUse:
+#          $ref: '#/components/schemas/codeableConcept'
+#
+#    network:
+#      properties:
+#        address:
+#          description: Identifier for the network access point of the user device.
+#          type: string
+#          minimum: 0
+#        type:
+#          description: The type of network access point.
+#          type: string
+#          minimum: 0
+#
+#    source:
+#      required:
+#        - identifier
+#      properties:
+#        site:
+#          description: Logical source location within the enterprise.
+#          type: string
+#          minimum: 0
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        type:
+#          $ref: '#/components/schemas/coding'
+#
+#    entity:
+#      description: Specific instance of data.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        type:
+#          $ref: '#/components/schemas/coding'
+#        role:
+#          $ref: '#/components/schemas/coding'
+#        lifecycle:
+#          $ref: '#/components/schemas/coding'
+#        securityLabel:
+#          $ref: '#/components/schemas/coding'
+#        name:
+#          description: A name of the entity in the audit event.
+#          type: string
+#          minimum: 0
+#        description:
+#          description: Text the describes the entity in more detail.
+#          type: string
+#          minimum: 0
+#        query:
+#          description: The query parameters for a query-type entities.
+#          type: string
+#          minimum: 0
+#        detail:
+#          $ref: '#/components/schemas/detail'
+#
+#    detail:
+#      required:
+#        - type
+#        - value
+#      properties:
+#        type:
+#          description: The type of extra detail provided in the value.
+#          type: string
+#          minimum: 0
+#        value:
+#          description: The details, base64 encoded. Used to carry bulk information.
+#          type: string
+#          minimum: 0
+#
+#    bundle:
+#      required:
+#        - type
+#      description: Contains a collection of resources.
+#      properties:
+#        identifier:
+#          $ref: '#/components/schemas/identifier'
+#        type:
+#          description: Indicates the purpose of this bundle - how it was intended to be used.
+#          type: string
+#          minimum: 0
+#        total:
+#          description: If a set of search matches, this is the total number of matches.
+#          type: integer
+#        link:
+#          $ref: '#/components/schemas/link'
+#        entry:
+#          $ref: '#/components/schemas/entry'
+#        signature:
+#              $ref: '#/components/schemas/signature'
+#
+#    link:
+#      required:
+#        - relation
+#        - url
+#      properties:
+#        relation:
+#          description: A name which details the functional use for this link.
+#          type: string
+#          minimum: 0
+#        url:
+#          description: The reference details for the link.
+#          type: string
+#          minimum: 0
+#
+#    entry:
+#      properties:
+#        link:
+#          description: A series of links that provide context to the entry.
+#          type: string
+#          minimum: 0
+#        fullUrl:
+#          description: Absolute URL for resource (server address, or UUID/OID).
+#          type: string
+#          minimum: 0
+#        resource:
+#          $ref: '#/components/schemas/resource'
+#        search:
+#          $ref: '#/components/schemas/search'
+#        request:
+#          $ref: '#/components/schemas/request'
+#        response:
+#          $ref: '#/components/schemas/response'
+#
+#    search:
+#      properties:
+#        mode:
+#          description: Why this entry is in the result set.
+#          type: string
+#          minimum: 0
+#        score:
+#          description: When searching, the server's search ranking score for the entry.
+#          type: integer
+#          format: double
+#          minimum: 0
+#          maximum: 1
+#
+#    request:
+#      required:
+#        - method
+#        - url
+#      properties:
+#        method:
+#          description: The HTTP verb for this entry in either a change history, or transaction/ transction response.
+#          type: string
+#          minimum: 0
+#        url:
+#          description: URL for HTTP equivalent of this entry.
+#          type: string
+#          minimum: 0
+#        ifNonematch:
+#          description: For managing cache currency.
+#          type: string
+#          minimum: 0
+#        ifModifiedSince:
+#          description: For managing update contention.
+#          type: string
+#          format: date-time
+#        ifmatch:
+#          description:   For managing update contention.
+#          type: string
+#          minimum: 0
+#        ifNoneExist:
+#          description: For conditional creates.
+#          type: string
+#          minimum: 0
+#
+#    response:
+#      required:
+#        - status
+#      properties:
+#        status:
+#          description: The status code returned by processing this entry.
+#          type: string
+#        location:
+#          description: The location header created by processing this operation.
+#          type: string
+#        etag:
+#          description: The etag for the resource.
+#          type: string
+#        lastModified:
+#          description: The date/time that the resource was modified on the server.
+#          type: string
+#          format: date-time
+#        outcome:
+#          $ref: '#/components/schemas/resource'
+#        signature:
+#          $ref: '#/components/schemas/signature'
+#
+#
+#    capabilityStatement:
+#      required:
+#        - status
+#        - date
+#        - kind
+#        - fhirVersion
+#        - acceptUnknown
+#        - format
+#      description: A statement of system capabilities.
+#      properties:
+#        url:
+#          description: Logical URI to reference this capability statement (globally unique).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        version:
+#          description: Business version of the capability statement.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        name:
+#          description: Name for this capability statement (computer friendly).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        title:
+#          description: Name for this capability statement (human friendly).
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        status:
+#          description: The status of this capability statement.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        experimental:
+#          description: For testing purposes, not real usage.
+#          type: boolean
+#        date:
+#          description: The date and time this was last changed.
+#          type: string
+#          format: date-time
+#        publisher:
+#          description: The name of the individual or organisation that published the capability statement.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        contact:
+#          $ref: '#/components/schemas/contactDetail'
+#        description:
+#          description: Natural language description of the capability statement.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        useContext:
+#          $ref: '#/components/schemas/usageContext'
+#        jurisdiction:
+#          $ref: '#/components/schemas/codeableConcept'
+#        purpose:
+#          description: Why this capability statement is defined.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        copyright:
+#          description: Use and/or publishing restrictions.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        kind:
+#          description: The way that this statement is intended to be used, to describe an actual running software.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        instantiates:
+#          description: Canonical URL of another capability statement this implements.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        software:
+#          $ref: '#/components/schemas/software'
+#        implementation:
+#          $ref: '#/components/schemas/implementation'
+#        fhirVersion:
+#          description: The version of FHIR the system uses.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        acceptUnknown:
+#          description: A code that indicates whether the application accepts unknown elements.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        format:
+#          description: A list of the formats/ content types supported by this implementation.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        patchformat:
+#          description: A list of the patch formats supported by this implementation using theirs content types.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        implementationGuide:
+#          description: A list of implementation guides that the server supports.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        profile:
+#          $ref: '#/components/schemas/structureDefinition'
+#        rest:
+#          $ref: '#/components/schemas/rest'
+#        messaging:
+#          $ref: '#/components/schemas/messaging'
+#        document:
+#          $ref: '#/components/schemas/document'
+#
+#    software:
+#      required:
+#        - name
+#      properties:
+#        name:
+#          description: A name the software is known by.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        version:
+#          description: The version identifier for the software covered by this statement.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        releaseDate:
+#          description: Date this version of the software was released.
+#          type: string
+#          format: date-time
+#
+#    implementation:
+#      required:
+#        - description
+#      description: Identifies a specific implementation instance that is described
+#      properties:
+#        description:
+#          description: Information about the specific installation that this capability statement relates to.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        url:
+#          description: An absolute base URL for the implementation (forms the base for REST interfaces)
+#          type: string
+#          minimum: 0
+#          maximum: 500
+#
+#    rest:
+#      required:
+#        - mode
+#      description: If the endpoint is a RESTful one.
+#      properties:
+#        mode:
+#          description: Identifies whether this statement is the client or server.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        documentation:
+#          description: Information about the systems restful capabilities that apply across all applications.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        security:
+#          $ref: '#/components/schemas/security'
+#        resource:
+#          $ref: '#/components/schemas/resource'
+#        interaction:
+#          $ref: '#/components/schemas/interaction'
+#        searchParam:
+#          $ref: '#/components/schemas/searchParam'
+#        operation:
+#          $ref: '#/components/schemas/operation'
+#        compartment:
+#          description: URI which is a reference to compartments served/used by the system.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#
+#    operation:
+#      required:
+#        - name
+#        - definition
+#      properties:
+#        name:
+#          description: Name by which the operation/query is invoked
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        definition:
+#          $ref: '#/components/schemas/operationDefinition'
+#
+#    security:
+#      properties:
+#        cors:
+#          description: Adds CORS Headers.
+#          type: boolean
+#        service:
+#          $ref: '#/components/schemas/codeableConcept'
+#        description:
+#          description: General description of how security works.
+#          type: string
+#          minimum: 0
+#          maximum: 100
+#        certificate:
+#          $ref: '#/components/schemas/certificate'

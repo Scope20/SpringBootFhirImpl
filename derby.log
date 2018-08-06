@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Aug 02 15:40:24 BST 2018:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0164-fb15-23fb-000013284758 
+on database directory memory:/home/essien/Learn/FhirImplementation/fhir/testdb with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
+Loaded from file:/home/essien/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_171-8u171-b11-0ubuntu0.18.04.1-b11
+user.dir=/home/essien/Learn/FhirImplementation/fhir
+os.name=Linux
+os.arch=amd64
+os.version=4.15.0-29-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,140 @@
+openapi: 3.0.0
+info:
+  description: my mhealth FHIR API
+  version: 0.0.1
+  title: my mhealth FHIR API
+  license:
+    name: All Rights Reserved
+  termsOfService: https://mymhealth.com/terms
+  contact:
+    name: API support
+    email: support@mymhealth.com
+    url: https://mymhealth.com
+security:
+  - bearerAuth: [] #api scheme applied globally
+servers:
+  - url: 'https://api.mymhealth.com'
+
+paths:
+  /patient:
+    post:
+      summary: Add a new Patient to the system
+      operationId: addPatient
+      tags:
+        - Patient
+      requestBody:
+        description: The Patient datapoints
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '201':
+          description: Null Response
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Error'
+
+  /patient/{patientId}:
+    get:
+      summary: Returns Patient based on patientId
+      operationId: getPatientById
+      tags:
+        - Patient
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          description: ID of Patient to return
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Patient'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+
+    MedicalEntry:
+      properties:
+        identifier:
+          type: string
+
+    PatientMedicalEntry:
+      description: Demographics and other administrative information about an individual or animal recieving care.
+      properties:
+        identifier:
+          type: string
+        active:
+          type: boolean
+        name:
+          $ref: '#/components/schemas/humanName'
+        telecom:
+          $ref: '#/components/schemas/ContactPoint'
+        gender:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        deceased:
+          $ref: '#/components/schemas/deceased'
+        address:
+          $ref: '#/components/schemas/Address'
+        maritalStatus:
+          $ref: '#/components/schemas/codeableConcept'
+        multipleBirth:
+          { $ref: '#/components/schemas/multipleBirthBoolean', $ref: '#/components/schemas/multipleBirthInteger' }
+        photo:
+          $ref: '#/components/schemas/Attachment'
+        contact:
+          $ref: '#/components/schemas/contact'
+        animal:
+          $ref: '#/components/schemas/animal'
+        communication:
+          $ref: '#/components/schemas/communication'
+        careProvider:
+          { $ref: '#/components/schemas/organization', $ref: '#/components/schemas/practitioner' }
+        managingOrganization:
+          $ref: '#/components/schemas/organization'
+        link:
+          $ref: '#/components/schemas/link'
